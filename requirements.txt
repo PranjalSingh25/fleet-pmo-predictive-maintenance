@@ -1,0 +1,25 @@
+# ──────────────────────────────────────────────────────────
+# FleetOps Anomaly Detection — Dependencies
+# ──────────────────────────────────────────────────────────
+
+# Core
+pandas>=2.0.0
+numpy>=1.24.0
+
+# ML (Phase 5)
+scikit-learn>=1.3.0
+xgboost>=2.0.0
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Database (Phase 6)
+sqlalchemy>=2.0.0
+# psycopg2-binary>=2.9.0  # Uncomment when using PostgreSQL
+
+# Testing
+pytest>=7.4.0
+
+# Linting
+ruff>=0.1.0
