@@ -1,0 +1,141 @@
+============================================
+FleetOps Anomaly Detection — Power BI DAX Measures
+============================================
+
+These measures assume a Power BI model connected to the PostgreSQL/SQLite star schema
+with tables: dim_truck, dim_date, fact_truck_monthly, fact_maintenance, fact_trip.
+
+
+=== 1. Executive Overview ===
+
+-- Fleet-wide YTD maintenance cost
+YTD Maintenance Cost =
+    CALCULATE(
+        SUM(fact_truck_monthly[maintenance_cost]),
+        DATESYTD(dim_date[date_key])
+    )
+
+-- Fleet-wide annual budget (sum of all trucks' 2022 baseline)
+Fleet Annual Budget =
+    SUMX(
+        dim_truck,
+        CALCULATE(
+            SUM(fact_truck_monthly[maintenance_cost]),
+            dim_date[year] = 2022
+        )
+    )
+
+-- YTD expected (pro-rata)
+YTD Expected =
+    [Fleet Annual Budget] *
+    DIVIDE(
+        MAX(dim_date[month]),
+        12
+    )
+
+-- Running overrun %
+Overrun % =
+    DIVIDE(
+        [YTD Maintenance Cost] - [YTD Expected],
+        [YTD Expected],
+        0
+    )
+
+-- Flagged truck count (active alerts)
+Flagged Truck Count =
+    COUNTROWS(
+        FILTER(
+            dim_truck,
+            [Overrun %] > 0.05
+        )
+    )
+
+-- Active fleet size
+Active Truck Count =
+    COUNTROWS(
+        FILTER(
+            dim_truck,
+            dim_truck[is_current] = 1
+                && dim_truck[status] = "Active"
+        )
+    )
+
+
+=== 2. Route Profitability ===
+
+-- Revenue per mile
+Revenue per Mile =
+    DIVIDE(
+        SUM(fact_truck_monthly[total_revenue]),
+        SUM(fact_truck_monthly[total_miles]),
+        0
+    )
+
+-- Maintenance cost per mile
+Maint Cost per Mile =
+    DIVIDE(
+        SUM(fact_truck_monthly[maintenance_cost]),
+        SUM(fact_truck_monthly[total_miles]),
+        0
+    )
+
+-- Utilization rate average
+Avg Utilization =
+    AVERAGE(fact_truck_monthly[utilization_rate])
+
+
+=== 3. Driver Scorecard ===
+
+-- Driver on-time rate (from driver_monthly_metrics or delivery_events)
+-- Requires joining dim_driver to fact_trip to delivery_events
+On-Time Rate =
+    DIVIDE(
+        COUNTROWS(
+            FILTER(
+                delivery_events,
+                delivery_events[on_time_flag] = "TRUE"
+                    && delivery_events[event_type] = "Delivery"
+            )
+        ),
+        COUNTROWS(
+            FILTER(
+                delivery_events,
+                delivery_events[event_type] = "Delivery"
+            )
+        ),
+        0
+    )
+
+
+=== 4. Safety Dashboard ===
+
+-- Total incident cost
+Total Incident Cost =
+    SUM(safety_incidents[claim_amount])
+
+-- Preventable incident ratio
+Preventable Ratio =
+    DIVIDE(
+        COUNTROWS(
+            FILTER(
+                safety_incidents,
+                safety_incidents[preventable_flag] = "True"
+            )
+        ),
+        COUNTROWS(safety_incidents),
+        0
+    )
+
+
+=== Date Intelligence ===
+
+-- YoY maintenance cost change
+YoY Change % =
+    VAR CurrentYear = SUM(fact_truck_monthly[maintenance_cost])
+    VAR PriorYear =
+        CALCULATE(
+            SUM(fact_truck_monthly[maintenance_cost]),
+            SAMEPERIODLASTYEAR(dim_date[date_key])
+        )
+    RETURN
+        DIVIDE(CurrentYear - PriorYear, PriorYear, 0)
