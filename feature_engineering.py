@@ -264,7 +264,7 @@ def build_features():
     feature_matrix.to_csv(output_path, index=False)
     print(f"\nFeature matrix saved to: {output_path}")
     print(f"  Shape: {feature_matrix.shape}")
-    print(f"\nTarget distribution (high_cost_next_month):")
+    print("\nTarget distribution (high_cost_next_month):")
     dist = feature_matrix["high_cost_next_month"].value_counts()
     total = len(feature_matrix)
     for val in sorted(dist.index):

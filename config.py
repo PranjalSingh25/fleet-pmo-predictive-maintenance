@@ -11,11 +11,21 @@ from pathlib import Path
 # PATHS
 # ──────────────────────────────────────────────────────────
 PROJECT_ROOT = Path(__file__).resolve().parent
-DATA_DIR = PROJECT_ROOT.parent / "Logistics Operations Database"
 OUTPUT_DIR = PROJECT_ROOT / "outputs"
 
 # Ensure output directory exists
 OUTPUT_DIR.mkdir(exist_ok=True)
+
+# Flexible data directory: checks env var, local data/ dir, or parent folder
+_env_data = os.getenv("FLEETOPS_DATA_DIR")
+if _env_data and Path(_env_data).exists():
+    DATA_DIR = Path(_env_data)
+elif (PROJECT_ROOT / "data").exists():
+    DATA_DIR = PROJECT_ROOT / "data"
+elif (PROJECT_ROOT.parent / "Logistics Operations Database").exists():
+    DATA_DIR = PROJECT_ROOT.parent / "Logistics Operations Database"
+else:
+    DATA_DIR = PROJECT_ROOT / "data"
 
 
 # ──────────────────────────────────────────────────────────

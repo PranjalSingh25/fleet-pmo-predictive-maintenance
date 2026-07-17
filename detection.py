@@ -344,7 +344,7 @@ def run_detection():
     overruns = compute_ytd_overruns(util_df, budgets)
     maint_flagged = overruns[overruns["severity"].notna()]
     print(f"      Total snapshots: {len(overruns):,}")
-    print(f"      Flagged (maintenance):")
+    print("      Flagged (maintenance):")
     print(f"        WARNING:  {len(maint_flagged[maint_flagged['severity'] == 'WARNING']):,}")
     print(f"        CRITICAL: {len(maint_flagged[maint_flagged['severity'] == 'CRITICAL']):,}")
 
@@ -380,7 +380,7 @@ def run_detection():
         print(f"  {severity:>8}: {count:,} truck-month snapshots")
 
     # Show sample of highest overruns
-    print(f"\n  Top 5 highest overruns:")
+    print("\n  Top 5 highest overruns:")
     top5 = (
         all_flagged
         .sort_values("overrun_pct", ascending=False)

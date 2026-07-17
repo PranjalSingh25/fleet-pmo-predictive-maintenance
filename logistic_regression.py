@@ -103,7 +103,7 @@ def run_logistic_regression():
     for line in report.split("\n"):
         print(f"  {line}")
 
-    print(f"\n  Positive-class metrics (high_cost_next_month = 1):")
+    print("\n  Positive-class metrics (high_cost_next_month = 1):")
     print(f"    Precision : {precision:.4f}")
     print(f"    Recall    : {recall:.4f}")
     print(f"    F1 Score  : {f1:.4f}")

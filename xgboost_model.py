@@ -10,7 +10,6 @@ Output: outputs/xgb_predictions.csv
         outputs/model_comparison_report.md
 """
 import pandas as pd
-import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -108,7 +107,7 @@ def run_xgboost():
     for line in report.split("\n"):
         print(f"  {line}")
 
-    print(f"\n  Positive-class metrics (high_cost_next_month = 1):")
+    print("\n  Positive-class metrics (high_cost_next_month = 1):")
     print(f"    Precision : {xgb_precision:.4f}")
     print(f"    Recall    : {xgb_recall:.4f}")
     print(f"    F1 Score  : {xgb_f1:.4f}")
@@ -128,7 +127,7 @@ def run_xgboost():
     top10 = imp_df.head(10)
 
     fig, ax = plt.subplots(figsize=(10, 6))
-    bars = ax.barh(
+    ax.barh(
         top10["feature"].values[::-1],
         top10["importance"].values[::-1],
         color="#2196F3",

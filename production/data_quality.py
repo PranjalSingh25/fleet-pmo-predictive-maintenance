@@ -12,10 +12,9 @@ Usage:
 """
 import sys
 import os
-from datetime import datetime
 
 import pandas as pd
-from sqlalchemy import create_engine, text, inspect
+from sqlalchemy import create_engine, inspect
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config

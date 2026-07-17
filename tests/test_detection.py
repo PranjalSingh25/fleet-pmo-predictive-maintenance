@@ -5,7 +5,6 @@ import sys
 import os
 
 import pandas as pd
-import numpy as np
 import pytest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -13,7 +12,6 @@ import config
 from detection import (
     compute_baseline_budgets,
     compute_ytd_overruns,
-    compute_monthly_fuel_cost_per_mile,
     merge_flags,
 )
 

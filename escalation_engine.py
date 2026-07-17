@@ -15,7 +15,6 @@ Usage:
     python escalation_engine.py
 """
 import pandas as pd
-from pathlib import Path
 from datetime import datetime
 
 import config
@@ -287,7 +286,7 @@ def run_escalation():
     # Combined file
     combined_path = config.OUTPUT_DIR / "escalation_emails_all.txt"
     with open(combined_path, "w", encoding="utf-8") as f:
-        f.write(f"FleetOps Maintenance Cost Escalation Report\n")
+        f.write("FleetOps Maintenance Cost Escalation Report\n")
         f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')}\n")
         f.write(f"Total Alerts: {len(emails)}\n")
         f.write(f"{'=' * 70}\n\n")
@@ -318,7 +317,7 @@ def run_escalation():
 
     # Show sample email
     if emails:
-        print(f"\n  --- SAMPLE EMAIL (first) ---")
+        print("\n  --- SAMPLE EMAIL (first) ---")
         # Print first 25 lines of first email
         sample_lines = emails[0].split("\n")[:25]
         for line in sample_lines:

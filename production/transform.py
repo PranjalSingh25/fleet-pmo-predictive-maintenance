@@ -13,12 +13,9 @@ Usage:
 import sys
 import os
 import time
-from pathlib import Path
-from datetime import date
 
 import pandas as pd
-import numpy as np
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
