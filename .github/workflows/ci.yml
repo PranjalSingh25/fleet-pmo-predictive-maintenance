@@ -1,0 +1,42 @@
+name: FleetOps CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Lint with ruff
+        run: |
+          ruff check . --select=E,W,F --ignore=E501
+
+      - name: Run tests
+        run: |
+          pytest tests/ -v --tb=short
+
+      - name: Quality gate - Detection thresholds
+        run: |
+          python -c "
+          import config
+          assert config.WARNING_THRESHOLD_PCT == 5.0
+          assert config.CRITICAL_THRESHOLD_PCT == 10.0
+          assert config.CRITICAL_THRESHOLD_PCT > config.WARNING_THRESHOLD_PCT
+          print('Quality gate passed: Detection thresholds are valid')
+          "
