@@ -76,6 +76,27 @@ Generates structured escalation emails for every CRITICAL truck combining:
 - **Incremental load** support with SCD2 merge logic
 - **CI/CD**: GitHub Actions with ruff + pytest + quality gates
 
+## Dataset & Setup
+
+This project uses the real-world **[Logistics Operations Database](https://www.kaggle.com/datasets/yogape/logistics-operations-database)** from Kaggle (created by Yoga PE).
+
+### Dataset Scale & Scope
+- **15 Relational CSV Tables**: `trucks.csv`, `maintenance_records.csv`, `truck_utilization_metrics.csv`, `fuel_purchases.csv`, `safety_incidents.csv`, `trips.csv`, `drivers.csv`, `loads.csv`, and more.
+- **Volume**: 300,000+ total records covering **36 continuous months (2022–2024)** across a fleet of **92 heavy trucks**.
+- **Key Metrics**: 196,000+ fuel transactions, 2,920 detailed maintenance events across 7 repair categories, and full trip/utilization logs.
+
+### Getting the Data
+To keep the Git repository lightweight (`<100 MB`), raw data files are not tracked directly in version control. To run the pipeline locally:
+
+1. **Download via Kaggle CLI** (recommended):
+   ```bash
+   pip install kaggle
+   kaggle datasets download -d yogape/logistics-operations-database --unzip -p data/
+   ```
+2. **Or Manual Download**:
+   - Download the archive directly from [Kaggle](https://www.kaggle.com/datasets/yogape/logistics-operations-database).
+   - Extract the 15 CSV files into a folder named `data/` inside the project root (or set the `FLEETOPS_DATA_DIR` environment variable pointing to your custom data folder).
+
 ## Quick Start
 
 ```bash
